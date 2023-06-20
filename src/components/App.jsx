@@ -12,7 +12,9 @@ import { PersistGate } from 'redux-persist/integration/react';
 const App = () => {
   const dispatch = useDispatch();
   const contacts = useSelector(state => state.contacts);
-  const filter = useSelector(state => state.filter);
+  const filter = useSelector(state => state.filter.toString());
+
+   console.log("Filter value:", filter);
 
   useEffect(() => {
     persistor.flush();
