@@ -1,7 +1,16 @@
+import { useDispatch, useSelector } from 'react-redux';
+import { setFilter } from '../../redux/filterSlice';
+import { getFilter } from '../../redux/selectors';
 import css from './Filter.module.css';
-import PropTypes from 'prop-types';
 
-export const Filter = ({ filter, onChange }) => {
+
+export const Filter = () => {
+  const filter = useSelector(getFilter);
+  const dispatch = useDispatch();
+
+  const handleFilterChange = event => {
+    dispatch(setFilter(event.target.value));
+  };
 
   return (
     <label className={css.label}>
@@ -9,17 +18,13 @@ export const Filter = ({ filter, onChange }) => {
       <input
         className={css.title}
         type="text"
+        placeholder="search here ..."
         title={'Start typing the contact name..'}
         value={filter}
-        onChange={onChange}
+        onChange={handleFilterChange}
       />
     </label>
   );
 };
 
-Filter.propTypes = {
-  onChange: PropTypes.func.isRequired,
-  filter: PropTypes.string.isRequired,
-
-};
 

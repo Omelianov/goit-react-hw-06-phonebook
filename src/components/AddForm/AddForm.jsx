@@ -1,11 +1,16 @@
 import { nanoid } from 'nanoid';
-import PropTypes from 'prop-types';
 import css from './AddForm.module.css';
 import { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { getContacts } from '../../redux/selectors';
+import { addContact } from '../../redux/contactsSlice';
 
-const AddForm = ({ addContact }) => {
+
+const AddForm = () => {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
+  const dispatch = useDispatch();
+  const contacts = useSelector(getContacts);
 
   const handleChangeName = event => {
     setName(event.target.value);
@@ -29,11 +34,22 @@ const AddForm = ({ addContact }) => {
       number: number,
     };
 
-    addContact(newContact);
+    addContactHandler(newContact);
 
     setName('');
     setNumber('');
   };
+
+  const addContactHandler = newContact => {
+  const findContact = contacts.find(contact => contact.name.toLowerCase() === newContact.name.toLowerCase());
+
+  if (findContact) {
+    alert(`${newContact.name} уже присутствует в контактах`);
+    return;
+  }
+
+  dispatch(addContact(newContact));
+};
 
   return (
     <form className={css.form} onSubmit={handleSubmit}>
@@ -42,6 +58,7 @@ const AddForm = ({ addContact }) => {
         <input
           type="text"
           name="name"
+          placeholder="enter name here"
           pattern="^[a-zA-Zа-яА-Я]+(([' \-][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
           title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
           value={name}
@@ -55,6 +72,7 @@ const AddForm = ({ addContact }) => {
         <input
           type="tel"
           name="number"
+          placeholder="enter number here"
           pattern="\+?\d{1,4}[-.\s]?\(?\d{1,3}\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
           title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
           value={number}
@@ -67,8 +85,5 @@ const AddForm = ({ addContact }) => {
   );
 };
 
-AddForm.propTypes = {
-  addContact: PropTypes.func.isRequired,
-};
 
 export default AddForm;
