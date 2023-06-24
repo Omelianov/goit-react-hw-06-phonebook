@@ -8,7 +8,8 @@ export const ContactItem = ({ name, number, itemKey }) => {
 
     const deleteContactHandler = () => {
         dispatch(deleteContact(itemKey))
-  };
+    };
+    
     return (
     <>
     <p key={itemKey}>{name}: {number}</p>
